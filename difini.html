@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Chichen Itzà</title>
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+</head>
+<body>
+    <a-scene scale="3 3 3" >
+        <a-entity light="type: ambient; intensity: 4" position= "3 5 2"></a-entity>
+
+      <!--Sound-->
+      <a-assets>
+        <audio id="ambiance" src="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/mayan-mystique.mp3?v=1746543572707"></audio>// cambiar url 
+      </a-assets>
+      <a-sound src="#ambiance" autoplay="true" loop="true" position="0 2 -5"></a-sound>
+
+      <!-- Sol jungle -->
+      <a-assets>
+        <img id= "grass" src= "https://github.com/Paola0009/Maya/blob/main/pastoo.JPG">
+      </a-assets>
+      <a-plane id="pasto" position="0 0 -40" rotation="-90 0 0" width="100" height="100" src="#grass" scale="3 3 3" color:" #228B22"></a-plane>// tiene puesto color : #228B22, se lo voy a quitar para ver como se ve
+
+      <!-- Ciel -->
+      <assets>
+        <a-asset-item id="cloud" src="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/cloud.glb?v=1746471359274"></a-asset-item>
+      </assets>
+      <a-sky color="#88ccff"></a-sky>
+      <a-entity id="nube 1" gltf-model="#cloud" position="8 123 27" scale="7 7 7" animation="property: position; from: 8 123 27; to: 12 123 27; dir: alternate; dur: 8000; easing: linear; loop: true"></a-entity>
+      <a-entity id="nube 2" gltf-model="#cloud" position="37 123 -180" scale="7 7 7" animation="property: position; from: 37 123 -180; to: 40 123 -180; dir: alternate; dur: 10000; easing: linear; loop: true"></a-entity>
+      <a-entity id="nube 3" gltf-model="#cloud" position="-111 123 -117" scale="7 7 7" animation="property: position; from: -111 123 -117; to: -108 123 -117; dir: alternate; dur: 9000; easing: linear; loop: true"></a-entity>
+      <a-entity id="nube 4" gltf-model="#cloud" position="-120 123 -4" scale="7 7 7" animation="property: position; from: -120 123 -4; to: -116 123 -4; dir: alternate; dur: 8500; easing: linear; loop: true"></a-entity>
+      <a-entity id="nube 5" gltf-model="#cloud" position="64 123 -62" scale="7 7 7" animation="property: position; from: 64 123 -62; to: 68 123 -62; dir: alternate; dur: 9500; easing: linear; loop: true"></a-entity>
+
+      <!-- Assets pour les textures -->
+      <a-assets>
+        <img id="Kukulcan" src="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/TCom_Rock_CliffVolcanic2_header.jpg?v=1746379477374">
+        <img id="stone" src="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/Stone.JPG?v=1746379176283">
+      </a-assets>
+
+      <!--Cenote-->
+      <a-assets>
+        <img id="cenote" src="https://github.com/Paola0009/Maya/blob/main/nuevo%20pasto.jpg">
+        <audio id="mouse" src="https://cdn.glitch.global/f0de172e-e436-49ee-ae2c-94d671d266ff/mouse-click.mp3?v=1746540962741"></audio>
+      </a-assets>
+      <a-plane id="Cenote" position="-34 2 67" rotation="-90 0 0" width="15" height="15" src="#cenote" scale="3 3 3" class="clicable"></a-plane>
+      <a-entity id="click-sound" sound="src: #mouse"></a-entity>
+      <script> 
+        AFRAME.registerComponent('open-info-box', {
+          init: function () {
+            let counter = 0;
+            this.el.addEventListener('click', () => {
+              // Joue le son
+              const soundEntity = document.querySelector('#click-sound');
+              if (soundEntity && soundEntity.components.sound) {
+                soundEntity.components.sound.playSound();}
+             // Crée une boîte texte
+            const sceneEl = document.querySelector('a-scene');
+            const container = document.createElement('a-entity');
+            const yPos = 3 + counter * 2;
+            container.setAttribute('position', `-34 ${yPos} 65`);
+            // Plan de fond 
+            const background = document.createElement('a-plane');
+            background.setAttribute('geometry', {primitive: 'plane', height: 2.5, width: 5 });
+            background.setAttribute('material', 'color: white; opacity: 0.9');
+            container.appendChild(background);
+            // Texte 
+            const cenotetext = document.createElement('a-text');
+            cenotetext.setAttribute('value',"Puit sacré \ Les cenotes en maya 'dzonot' sont sacrés.\Les cénotes étaient considérés comme des sources de vie, en plus de fournir le liquide vital.\Ils étaient une entrée vers le Xibalba, l’inframonde, et un centre de communion avec les dieux.\Communément, nous purifions notre corps et notre âme dans les cenotes. Ce sont des centres de rituels et de spiritualité.")
+            cenotetext.setAttribute('color', 'black');
+            cenotetext.setAttribute('align', 'center');
+            cenotetext.setAttribute('width', 4.5);
+            cenotetext.setAttribute('position', '0 0.3 0.01');
+            container.appendChild(text);
+            // Bouton Fermer 
+            const closeBtn = document.createElement('a-plane');
+            closeBtn.setAttribute('position', '2.2 1 0.01');
+            closeBtn.setAttribute('width', '0.5');
+            closeBtn.setAttribute('height', '0.5');
+            closeBtn.setAttribute('color', 'red');
+
+            const closeText = document.createElement('a-text');
+            closeText.setAttribute('value', 'X');
+            closeText.setAttribute('color', 'white');
+            closeText.setAttribute('align', 'center');
+            closeText.setAttribute('position', '0 0 0.01');
+            closeText.setAttribute('width', 2);
+            closeBtn.appendChild(closeText);
+            closeBtn.addEventListener('click', () => {
+            container.parentNode.removeChild(container);});
+
+            container.appendChild(closeBtn);
+            sceneEl.appendChild(container);
+            counter++;});}});
+
+            // Activation sur le cenote 
+            document.addEventListener('DOMContentLoaded', () => {
+        const cenote = document.querySelector('#cenote-plane');
+        cenote.setAttribute('open-info-box', '');});
+       </script>
+
+    <!--Kukulcan-->
+        <a-entity id="Castillo" position="0 0 -45" scale="3 3 3" class="clicable">
+            <a-box position="0 0.5 0" width="10" depth="10" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 1.5 0" width="9" depth="9" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 2.5 0" width="8" depth="8" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 3.5 0" width="7" depth="7" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 4.5 0" width="6" depth="6" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 5.5 0" width="5" depth="5" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 6.5 0" width="4" depth="4" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 7.5 0" width="3" depth="3" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 8.5 0" width="2" depth="2" height="1" src="#Kukulcan"></a-box>
+            <a-box position="0 9.5 0" width="1" depth="1" height="1" src="#Kukulcan"></a-box>
+        </a-entity>
+
+       <!-- <a-entity cursor="fuse: false; rayOrigin: mouse"
+        raycaster="objects: .clicable"
+        position="0 0 -1"
+        geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+        material="color: black; shader: flat">
+        </a-entity>
+    < OBJET CLIQUABLE 
+        <a-box position="0 1.5 -4" class="clicable" color="orange" open-info-box-castillo></a-box> -->
+
+        <script>
+            AFRAME.registerComponent('open-info-box-castillo', {
+              init: function () {
+                let counter = 0;
+                this.el.addEventListener('click', () => {
+                  // Joue le son
+                  const soundEntity = document.querySelector('#click-sound');
+                  if (soundEntity && soundEntity.components.sound) {
+                    soundEntity.components.sound.playSound();
+                  }
+          
+                  // Crée une boîte texte
+                  const sceneEl = document.querySelector('a-scene');
+                  const container = document.createElement('a-entity');
+          
+                  const yPos = 3 + counter * 2;
+                  container.setAttribute('position', `0 ${yPos} -40`);
+          
+                  // Fond
+                  const background = document.createElement('a-plane');
+                  background.setAttribute('geometry', {
+                    primitive: 'plane',
+                    height: 2.5,
+                    width: 5
+                  });
+                  background.setAttribute('material', 'color: white; opacity: 0.9');
+                  container.appendChild(background);
+          
+                  // Texte
+                  const text = document.createElement('a-text');
+                  text.setAttribute('value', "El Castillo (Temple de Kukulcán)\Vers l’an 435, la ville de Chichen Itzá est fondée. Le nom Chichen signifie bouche du puits et Itzá fait référence à ceux qui l'ont fondé, les Itzáes sorcières de l'eau.\ Cette pyramide est un calendrier en pierre. Elle comporte 365 marches, représentant les jours de l'année.\Elle est alignée avec les équinoxes pour créer l'illusion d'un serpent descendant.\ C'est le Dieu Quetzalcóatl, serpent à plumes");
+                  text.setAttribute('color', 'black');
+                  text.setAttribute('align', 'center');
+                  text.setAttribute('width', 4.5);
+                  text.setAttribute('position', '0 0.3 0.01');
+                  container.appendChild(text);
+          
+                  // Bouton Fermer
+                  const closeBtn = document.createElement('a-plane');
+                  closeBtn.setAttribute('position', '2.2 1 0.01');
+                  closeBtn.setAttribute('width', '0.5');
+                  closeBtn.setAttribute('height', '0.5');
+                  closeBtn.setAttribute('color', 'red');
+          
+                  const closeText = document.createElement('a-text');
+                  closeText.setAttribute('value', 'X');
+                  closeText.setAttribute('color', 'white');
+                  closeText.setAttribute('align', 'center');
+                  closeText.setAttribute('position', '0 0 0.01');
+                  closeText.setAttribute('width', 2);
+                  closeBtn.appendChild(closeText);
+          
+                  closeBtn.addEventListener('click', () => {
+                 container.parentNode.removeChild(container);});
+          
+                  container.appendChild(closeBtn);
+          
+                  sceneEl.appendChild(container);
+                  counter++;});}});
+          
+            // Activation automatique
+            document.addEventListener('DOMContentLoaded', () => {
+              const castillo = document.querySelector('#Castillo');
+              castillo.setAttribute('open-info-box-castillo', '');});
+          </script>
+    
+        <!--Preséntation-->
+        <a-assets><a-asset-item id="guide" src="https://cdn.glitch.me/f0de172e-e436-49ee-ae2c-94d671d266ff/guide.glb?v=1746516924484"></a-asset-item></a-assets>
+        <a-entity id="guide" gltf-model="#guide" position="-10 0 -82" 
+                scale="0.02 0.02 0.02" 
+                rotation="0 90 0" 
+                class="cliquable" faire-parler></a-entity>
+        <!--bulle de texte--> 
+        <a-entity id="bulle"
+        position="0 2.2 -4"
+        visible="false"
+        class="cliquable">
+        <a-plane color="#f09648" opacity="0.7" width="3" height="0.8"></a-plane>
+        <a-text id="bulle-text"
+        value=""
+        align="center"
+        color="#FFF"
+        width="2.5"
+        position="0 0 0.01">
+        </a-text>
+        </a-entity>
+
+        <a-entity id="infoText" visible="false" position="0 2 -45">
+            <a-plane width="4.5" height="2" color="#fff" opacity="0.9"></a-plane>
+            <a-text id="infoTextValue" value="" color="#000" align="center" width="3.5" position="0 0.3 0.01"></a-text>
+            <a-box id="closeButton" position="0 -0.6 0.01" width="1.2" height="0.4" depth="0.1" color="#c44"></a-box>
+            <a-text value="Fermer" position="0 -0.6 0.02" align="center" color="#fff" width="2"></a-text>
+        </a-entity>
+        <script>
+            const guidephrases = [
+              "Bonjour et bienvenue à la Ruta Maya, je vous montrerai une des villes les plus importantes et puissantes de la culture Maya.",
+              "Chichen Itzá",
+              "Je m’appelle Aj Koo et je serais ton guide.",
+              "Suis-moi, je vais te faire découvrir les secrets de ma civilisation !"];
+            let indexPhrase = 0;
+          
+            AFRAME.registerComponent('faire-parler', {
+              init: function () {
+                const guide = this.el;
+                const bulle = document.querySelector('#bulle');
+                const texte = document.querySelector('#bulle-text');
+          
+                // Affiche la première phrase au clic sur le guide
+                guide.addEventListener('click', () => {
+                  indexPhrase = 0;
+                  texte.setAttribute('value', phrases[indexPhrase]);
+                  bulle.setAttribute('visible', 'true');
+                });
+          
+                // Avance dans les phrases au clic sur la bulle
+                bulle.addEventListener('click', () => {
+                  indexPhrase++;
+                  if (indexPhrase >= phrases.length) {
+                    indexPhrase = 0;
+                  }
+                  texte.setAttribute('value', phrases[indexPhrase]);});}});
+                // === Bouton "Fermer" ===
+                document.addEventListener('DOMContentLoaded', () => {
+                const closeButton = document.querySelector('#closeButton');
+                if (closeButton) {
+                closeButton.addEventListener('click', () => {
+                document.querySelector('#infoText').setAttribute('visible', false);
+              }); }});
+            </script>
+
+    <!--Tzompantli-->
+            <a-assets>
+                <a-asset-item id= "tzompantli" src="https://cdn.glitch.me/f0de172e-e436-49ee-ae2c-94d671d266ff/Tzompantli .glb?v=1746383332024"></a-asset-item>
+            </a-assets>
+            <a-entity id="Tzompantli" gltf-model="#tzompantli" position="5 0 -180" scale="1 1 1" class="clicable"></a-entity>
+
+            <script>
+                AFRAME.registerComponent('open-info-box-tzompantli', {
+                  init: function () {
+                    let counter = 0;
+                    this.el.addEventListener('click', () => {
+                      const soundEntity = document.querySelector('#click-sound');
+                      if (soundEntity && soundEntity.components.sound) {
+                        soundEntity.components.sound.playSound();
+                      }
+              
+                      const sceneEl = document.querySelector('a-scene');
+                      const container = document.createElement('a-entity');
+              
+                      const yPos = 3 + counter * 2;
+                      container.setAttribute('position', `5 ${yPos} -175`);
+              
+                      // Fond
+                      const background = document.createElement('a-plane');
+                      background.setAttribute('geometry', {
+                        primitive: 'plane',
+                        height: 2.5,
+                        width: 5
+                      });
+                      background.setAttribute('material', 'color: white; opacity: 0.9');
+                      container.appendChild(background);
+              
+                      // Texte
+                      const text = document.createElement('a-text');
+                      text.setAttribute('value',
+                        "Tzompantli (mur des crânes)\Structure rituelle où les crânes des sacrifiées étaient exposés.\Symbolisait la puissance, la peur et l’ordre cosmique.\nSouvent dédié au dieu de la guerre ou de la mort.");
+                      text.setAttribute('color', 'black');
+                      text.setAttribute('align', 'center');
+                      text.setAttribute('width', 4.5);
+                      text.setAttribute('position', '0 0.3 0.01');
+                      container.appendChild(text);
+              
+                      // Bouton Fermer
+                      const closeBtn = document.createElement('a-plane');
+                      closeBtn.setAttribute('position', '2.2 1 0.01');
+                      closeBtn.setAttribute('width', '0.5');
+                      closeBtn.setAttribute('height', '0.5');
+                      closeBtn.setAttribute('color', 'red');
+              
+                      const closeText = document.createElement('a-text');
+                      closeText.setAttribute('value', 'X');
+                      closeText.setAttribute('color', 'white');
+                      closeText.setAttribute('align', 'center');
+                      closeText.setAttribute('position', '0 0 0.01');
+                      closeText.setAttribute('width', 2);
+                      closeBtn.appendChild(closeText);
+              
+                      closeBtn.addEventListener('click', () => {
+                      container.parentNode.removeChild(container);});
+              
+                      container.appendChild(closeBtn);
+                      sceneEl.appendChild(container);
+                      counter++;});}});
+
+                // Activation automatique
+                document.addEventListener('DOMContentLoaded', () => {
+                  const tzompantli = document.querySelector('#Tzompantli');
+                  tzompantli.setAttribute('open-info-box-tzompantli', '');});
+            </script>
+    
+    <!--Plateforme de Vénus -->
+            <a-assets>
+                <img id="roi"
+                <img id="sacerdote"
+                <ing id="noble"
+                <img id="commercant"
+                <img id="artisan"
+                <img id="esclave" 
+            </a-assets>
+
+
+    </a-scene>
+</body>
+</html>
+
+          
